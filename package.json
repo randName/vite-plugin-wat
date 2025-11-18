@@ -1,0 +1,10 @@
+{
+	"type": "module",
+	"scripts": {
+		"dev": "vite"
+	},
+	"devDependencies": {
+		"vite": "^7.2.0",
+		"wabt": "^1.0.35"
+	}
+}
