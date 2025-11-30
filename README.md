@@ -2,7 +2,7 @@
 
 ## Usage
 
-no package, just copy `watPlugin.js` and install [`wabt`](https://github.com/AssemblyScript/wabt.js) (e.g. `npm i -D wabt`)
+no package, just copy `watPlugin.js` and install [`jco`](https://github.com/bytecodealliance/jco) (e.g. `npm i -D @bytecodealliance/jco`)
 
 ```js
 // vite.config.js
@@ -36,5 +36,6 @@ instance.exports.add(1, 2) // 3
 - [WASM intro](https://rsms.me/wasm-intro)
 - [Understanding WAT](https://developer.mozilla.org/en-US/docs/WebAssembly/Guides/Understanding_the_text_format)
 - [WASM by hand](https://github.com/rhmoller/wasm-by-hand)
+- [`wasm-tools`](https://github.com/bytecodealliance/wasm-tools)
+- [`wasm-tools parse` demo](https://bytecodealliance.github.io/wasm-tools/parse)
 - [WebAssembly Binary Toolkit](https://github.com/WebAssembly/wabt)
-- [`wat2wasm` demo](https://webassembly.github.io/wabt/demo/wat2wasm/)

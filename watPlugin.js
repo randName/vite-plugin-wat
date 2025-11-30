@@ -1,5 +1,4 @@
-import path from 'node:path'
-import wabtInit from 'wabt'
+import { parse } from '@bytecodealliance/jco'
 
 /**
  * @param {string} b64
@@ -13,10 +12,9 @@ const watHelper = async (b64, importObject, compileOptions) => {
 }
 
 /**
- * @param {import('./wat').WasmFeatures} [features]
  * @returns {import('vite').Plugin}
  */
-export const wat = (features) => {
+export const wat = () => {
 	/** @type {import('vite').ResolvedConfig} */
 	let config
 
@@ -24,18 +22,6 @@ export const wat = (features) => {
 	const watHelperCode = watHelper.toString()
 	const watHelperRegex = /^\0virtual\:wat-helper\.js$/
 	const watFileRegex = /\.wat$/
-	const wabtPromise = wabtInit()
-
-	/**
-	 * @param {string} fn
-	 * @param {string | Uint8Array} src
-	 */
-	const compile = async (fn, src) => {
-		const parsed = (await wabtPromise).parseWat(fn, src, features)
-		parsed.validate()
-		const bin = parsed.toBinary({ write_debug_names: true })
-		return bin.buffer
-	}
 
 	return {
 		name: 'wat-loader',
@@ -59,7 +45,7 @@ export const wat = (features) => {
 			async handler(code, id) {
 				if (!watFileRegex.test(id)) return null
 				try {
-					const buf = await compile(path.basename(id), code)
+					const buf = await parse(code)
 					const b64 = JSON.stringify(btoa(String.fromCodePoint.apply(undefined, buf)))
 					return {
 						code: `import _i from "${watHelperId}";export default (o,c)=>_i(${b64},o,c)`,

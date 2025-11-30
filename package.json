@@ -4,7 +4,7 @@
 		"dev": "vite"
 	},
 	"devDependencies": {
-		"vite": "^7.2.0",
-		"wabt": "^1.0.35"
+		"@bytecodealliance/jco": "^1.15.0",
+		"vite": "^7.2.0"
 	}
 }
