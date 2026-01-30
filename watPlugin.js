@@ -3,10 +3,13 @@ import { parse } from '@bytecodealliance/jco'
 /**
  * @param {string} b64
  * @param {WebAssembly.Imports} [importObject]
- * @param {import('./wat').CompileOptions} [compileOptions]
+ * @param {WebAssembly.WebAssemblyCompileOptions} [compileOptions]
  */
 const watHelper = async (b64, importObject, compileOptions) => {
-	const arr = Uint8Array.from(globalThis.atob(b64), (x) => x.codePointAt(0))
+	const arr =
+		'fromBase64' in Uint8Array
+			? Uint8Array.fromBase64(b64)
+			: Uint8Array.from(globalThis.atob(b64), (x) => x.codePointAt(0))
 	const mod = await WebAssembly.instantiate(arr, importObject, compileOptions)
 	return mod.instance
 }
@@ -38,7 +41,7 @@ export const wat = () => {
 			filter: { id: [watHelperRegex] },
 			handler(id) {
 				if (id === watHelperId) return `export default ${watHelperCode}`
-			}
+			},
 		},
 		transform: {
 			filter: { id: watFileRegex },
@@ -46,7 +49,7 @@ export const wat = () => {
 				if (!watFileRegex.test(id)) return null
 				try {
 					const buf = await parse(code)
-					const b64 = JSON.stringify(btoa(String.fromCodePoint.apply(undefined, buf)))
+					const b64 = JSON.stringify(toBase64(buf))
 					return {
 						code: `import _i from "${watHelperId}";export default (o,c)=>_i(${b64},o,c)`,
 					}
@@ -64,3 +67,15 @@ export const wat = () => {
 }
 
 export default wat
+
+/**
+ * polyfill for `Uint8Array.prototype.toBase64`
+ * @param {Uint8Array} arr
+ */
+function toBase64(arr) {
+	let binary = ''
+	for (let i = 0; i < arr.length; i += 0x8000) {
+		binary += String.fromCodePoint(...arr.subarray(i, i + 0x8000))
+	}
+	return globalThis.btoa(binary)
+}

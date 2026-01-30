@@ -1,12 +1,7 @@
-export type CompileOptions = {
-	builtins?: string[]
-	importedStringConstants?: string
-}
-
 declare module '*.wat' {
 	function init(
 		importObject?: WebAssembly.Imports,
-		compileOptions?: CompileOptions
+		compileOptions?: WebAssembly.WebAssemblyCompileOptions,
 	): Promise<WebAssembly.Instance>
 	export default init
 }
