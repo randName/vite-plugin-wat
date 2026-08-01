@@ -54,12 +54,7 @@ export const wat = () => {
 						code: `import _i from "${watHelperId}";export default (o,c)=>_i(${b64},o,c)`,
 					}
 				} catch (error) {
-					this.environment.logger.error(error.message, {
-						error,
-						clear: true,
-						timestamp: true,
-					})
-					return `export default ()=>{throw new Error(${JSON.stringify(error.message)})}`
+					this.error(error)
 				}
 			},
 		},
